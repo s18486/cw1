@@ -12,18 +12,21 @@ namespace Cw1
             //Console.Writeline("hello world!");
             //var person = new Person { imie = "john" };
             var url = args.Length > 0 ? args[0]: "https://pja.edu.pl";
-            var httpClient = new HttpClient();
-            var response = await httpClient.GetAsync(url);
-
-            if (response.IsSuccessStatusCode)
+            using (var httpClient = new HttpClient())
             {
-                var tmp = await response.Content.ReadAsStringAsync();
-                var reg = new Regex("[a-z]+[a-z0-9]*@[a-z0-9]+\\.[a-z]+", RegexOptions.IgnoreCase);
-                var matches = reg.Matches(tmp);
-
-                foreach(var match in matches)
+                using (var response = await httpClient.GetAsync(url))
                 {
-                    Console.WriteLine(match.ToString());
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var tmp = await response.Content.ReadAsStringAsync();
+                        var reg = new Regex("[a-z]+[a-z0-9]*@[a-z0-9]+\\.[a-z]+", RegexOptions.IgnoreCase);
+                        var matches = reg.Matches(tmp);
+
+                        foreach (var match in matches)
+                        {
+                            Console.WriteLine(match.ToString());
+                        }
+                    }
                 }
             }
         }          
